@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
+<div id="mapid"></div>
+
+<script>
+	var rssiPoints = {{ rssiPoints|safe }}
+
+	var map = new L.Map('mapid');
+
+	L.tileLayer( 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+		maxZoom: 18,
+		minZoom: 14,
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+    subdomains: ['a','b','c']
+	}).addTo( map );
+
+    L.geoJSON(rssiPoints, {
+    	pointToLayer: function (feature, latlng) {
+        return L.circle(latlng, {
+			    radius: 1.5,
+			    fillColor: "#dc0067",
+			    fillOpacity: (parseInt(feature.rssi)+100)/120
+			});
+      }
+    }).addTo(map);
+
+    map.setView(new L.LatLng(50.830332, 7.114657), 14);
+
+</script>
+{% endblock %}
