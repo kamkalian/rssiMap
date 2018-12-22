@@ -1,4 +1,3 @@
-import decimal
 import math
 
 from app import db
@@ -12,7 +11,6 @@ class Point(db.Model):
 	rssi = db.Column(db.Integer)
 	pdop = db.Column(db.Float)
 	sat = db.Column(db.Integer)
-	device = db.Column(db.String)
 	timestamp = db.Column(db.DateTime)
 
 	def to_dict(self):

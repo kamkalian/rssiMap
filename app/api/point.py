@@ -1,8 +1,10 @@
 from app.api import bp
+from app import db
 from app.model import Point
 from flask import jsonify
 from flask import request
 from math import sqrt
+import datetime
 
 
 @bp.route('/points/<float:lat>:<float:lon>:<int:distance>', methods=['GET'])
@@ -23,8 +25,30 @@ def get_points(lon, lat, distance):
 
 @bp.route('/points', methods=['POST'])
 def input_points():
-    data = request.get_json() or []
-    print(data)
-    response = jsonify(data)
-    response.status_code = 201
+    data = request.get_json() or {}
+
+    try:
+        lat = data['lat']
+        lon = data['lon']
+        rssi = data['rssi']
+        pdop = data['pdop']
+        sat = data['sat']
+        token = data['token']
+
+        dt = datetime.datetime.now()
+
+        if token == "E3xte.rna0lEnUcloSsurBe":
+            point = Point(lat=lat, lon=lon, rssi=rssi, pdop=pdop, sat=sat, timestamp=dt)
+            db.session.add(point)
+            db.session.commit()
+            response = jsonify('success')
+            response.status_code = 201
+        else:
+            response = jsonify('invalid token')
+            response.status_code = 400
+
+    except KeyError:
+        response = jsonify('bad request')
+        response.status_code = 400
+
     return response

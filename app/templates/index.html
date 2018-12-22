@@ -6,7 +6,7 @@
 <div id="mapid"></div>
 
 <script>
-	var rssiPoints = {{ rssiPoints|safe }}
+	var rssiPoints = JSON.parse({{ rssiPoints|tojson|safe }})
     console.log(rssiPoints);
 
 	var map = new L.Map('mapid');
@@ -28,7 +28,7 @@
       }
     }).addTo(map);
 
-    map.setView(new L.LatLng(50.830332, 7.114657), 14);
+    map.setView(new L.LatLng(50.830332, 7.114657), 18);
 
 </script>
 {% endblock %}

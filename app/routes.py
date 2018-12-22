@@ -1,7 +1,7 @@
 from flask import render_template
 from app import app
 from app.model import Point
-from flask import jsonify
+from flask import json
 
 @app.route('/')
 @app.route('/index')
@@ -14,4 +14,4 @@ def index():
 	for p in points:
 		geo_json.append(p.to_dict())
 
-	return render_template('index.html', title=u'Freifunk RSSI Map', rssiPoints=jsonify(geo_json), points=points)
+	return render_template('index.html', title=u'Freifunk RSSI Map', rssiPoints=json.dumps(geo_json), points=points)
