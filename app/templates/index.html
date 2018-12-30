@@ -3,20 +3,30 @@
 {% block content %}
 
 
+<div class="bg-white p-1 w-50 fixed-top rounded-bottom small" style="margin:auto;">
+    rssiMap | Points:{{ count_points }}
+</div>
+
+
 <div id="mapid"></div>
 
 <script>
 	var rssiPoints = JSON.parse({{ rssiPoints|tojson|safe }})
     console.log(rssiPoints);
 
-	var map = new L.Map('mapid');
+	var grayscale = L.tileLayer('', {
+	        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+	        subdomains: ['a','b','c']}),
+        osm   = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+            subdomains: ['a','b','c']});
 
-	L.tileLayer( 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-		maxZoom: 18,
-		minZoom: 14,
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-    subdomains: ['a','b','c']
-	}).addTo( map );
+
+    var map = L.map('mapid', {
+        maxZoom: 18,
+		minZoom: 12,
+        layers: [osm, grayscale]
+    });
 
     L.geoJSON(rssiPoints, {
     	pointToLayer: function (feature, latlng) {
@@ -30,5 +40,11 @@
 
     map.setView(new L.LatLng(50.814903908, 7.156198025), 14);
 
+    var baseMaps = {
+        "OpenStreetMap": osm,
+        "Grayscale": grayscale
+    };
+
+    L.control.layers(baseMaps).addTo(map);
 </script>
 {% endblock %}

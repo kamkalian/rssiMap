@@ -28,4 +28,10 @@ def index():
             koords.append(geo_dict['coordinates'])
             geo_json.append(geo_dict)
 
-    return render_template('index.html', title=u'Freifunk RSSI Map', rssiPoints=json.dumps(geo_json), points=points)
+    count_points = len(koords)
+
+    return render_template(
+        'index.html',
+        title=u'Freifunk RSSI Map',
+        rssiPoints=json.dumps(geo_json),
+        count_points=count_points)
